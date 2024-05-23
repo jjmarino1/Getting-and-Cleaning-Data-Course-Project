@@ -7,7 +7,7 @@ URL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR
 
 download.file(URL,"project.zip",mode = "wb")
 
-unzip("project.zip", exdir = "/Project")
+unzip("Project.zip", exdir = "Project")
 
 #Read features file into table
 features_file <- "C:\\Users\\jjmar\\OneDrive\\Documents\\R---Data-Science-Class\\Temporary_For_version_control\\HelloWorld\\Project\\UCI HAR Dataset\\features.txt"
@@ -72,6 +72,10 @@ test_and_training_df <- select(test_and_training_df, Activity, contains("Mean"),
 dt <- as.data.table(test_and_training_df)
 dt <- dt[ , lapply(.SD, mean), by  = "Activity"]
 
+#rename column names to remove special characters
+colnames(test_and_training_df) <- gsub("[()-]", "", colnames(test_and_training_df))
+colnames(dt) <- gsub("[()-]", "", colnames(dt))
+
 #Write DataFrames to excel files
-write.csv(test_and_training_df, file = "test_and_training_data.csv", row.names = FALSE)
-write.csv(dt, "means_by_activity.csv", row.names = FALSE)
+write.table(test_and_training_df, file = "test_and_training_data.txt", row.names = FALSE, col.names = TRUE)
+write.table(dt, "means_by_activity.txt", row.names = FALSE, col.names = TRUE)
